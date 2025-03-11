@@ -5,13 +5,19 @@ class Birge_Vieta:
         self.polnmCoeffsList: list[float] = coeffs
         self.raices = []
 
+    def getRaices(self):
+        return self.raices
+
     def iniciarBirgeVieta(self):
         grado = len(self.polnmCoeffsList) - 1
         polnmList = self.polnmCoeffsList
         for i in range(grado - 2):
             r = self.iniciarIteracion(polnmList)
-            self.raices = r
+            self.raices.append(r)
             polnmList = UtilMath.divisionSintetica(polnmList,r)
+        rList = UtilMath.formulaGen(polnmList)
+        for r in rList:
+            self.raices.append(r)
 
     @staticmethod
     def iniciarIteracion(polnmcoeffs:list[float]):
@@ -29,6 +35,8 @@ class Birge_Vieta:
         while error > e:
 
             xinext = xi - (UtilMath.evaluarFuncion(polnmcoeffs,xi)/UtilMath.evaluarFuncion(polnmDervcoeffs,xi))
+            if xinext < 0.0000001:
+                return 0
             error = abs((xinext - xi)/xinext)
             print("---------------------------")
             print(" i | Xi | F(Xi) | Xi+1 | e |")
@@ -37,6 +45,13 @@ class Birge_Vieta:
             xi = xinext
             i += 1
         return xi
+    def tieneRaicesNull(self,polnmcoeffs:list[float]):
+        last = len(polnmcoeffs) - 1
+        if polnmcoeffs[last] == 0:
+            polnmcoeffs = UtilMath.factPolinmRaizNula(polnmcoeffs)
+            return True
+        else:
+            return False
 
 
 
